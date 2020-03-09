@@ -29,6 +29,7 @@ library(gridExtra)
 library(influence.ME)
 library(tidyverse)
 library(directlabels)
+library(usmap)
 ```
 
 Team ID: Team 6
@@ -150,16 +151,29 @@ To make causal inferences with propensity score analysis, we make the following 
 
 # Results    
 
+```{r}
+data(Fatalities)
+data = Fatalities %>% 
+  mutate(fatal_rate = fatal/pop*10000)
+```
+
 ## Descriptive Analysis     
 
-First, we found out there is an incomplete observation. The observation for California in 1988 did not include information on if the State mandated a jail sentence. We attempted to research the value but could not find a definitive answer. Therefore, we removed the observation. Of the 48 States included, 41 did not change their policy from 1982 to 1988. The fatality rates of the seven states who did change their policy is shown in Figure \@ref(fig:fatal)(a). Both South Carolina and Nevada changed their policy in the mandatory jail sentence from no to yes in 1983, but their fatality rates changed in the opposite direction. Similarly, we can also observe this same situation in Oregon, Utah, and Connecticut.    
+The distribution of traffic fatality rate is not even across state borders (Figure \@ref(fig:map)). First, we found out there is an incomplete observation. The observation for California in 1988 did not include information on if the State mandated a jail sentence. We attempted to research the value but could not find a definitive answer. Therefore, we removed the observation. Of the 48 States included, 41 did not change their policy from 1982 to 1988. The fatality rates of the seven states who did change their policy is shown in Figure \@ref(fig:fatal)(a). Both South Carolina and Nevada changed their policy in the mandatory jail sentence from no to yes in 1983, but their fatality rates changed in the opposite direction. Similarly, we can also observe this same situation in Oregon, Utah, and Connecticut.    
+
+```{r map, fig.cap = "State traffic fatality rate per 10,000 population in years 1982-1988"}
+data_map = data
+data_map$state = toupper(as.character(data_map$state))
+
+plot_usmap(data = data_map, values = "fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) + 
+  scale_fill_continuous(name = paste("Fatality Rate (", i, ")", sep = ""), label = scales::comma) + 
+  theme(legend.position = "right") +
+  facet_wrap(~year)
+```
 
 Then, we explore the distribution of fatalities rate across all observations. Figure \@ref(fig:fatal)(b) shows that overall, states that had a mandatory jail sentence had a higher fatality rate than states that did not. Figure \@ref(fig:fatal)(c) shows that distributions of fatalities rate for different years are roughly the same.
 
 ```{r fatal, fig.cap="(a) Fatality rate for states that changed their policy in the mandatory jail sentence from 1982 to 1988 (b) Boxplot of the fatality rate for different policies in the mandatory jail sentence (c) Boxplot of the fatality rate for different years", fig.height=3, fig.width=5}
-data(Fatalities)
-data = Fatalities %>% 
-  mutate(fatal_rate = fatal/pop*10000)
 
 state_1 <- c('ct', 'nv', 'oh', 'or', 'sc', 'ut')
 
