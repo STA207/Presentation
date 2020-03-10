@@ -326,8 +326,6 @@ fit_r = lmer(fatal_rate ~ region + year + (1 | state), data = dta_m2)
 anova(fit3, fit_r, test = "Chisq")
 ```
 
-
-
 : \label{tab:chisq}Chi-squared test of fixed effect
 
 | Model  |  Df  |    AIC  |  BIC  | logLik | deviance | Chisq | Chi Df | Pr(>Chisq) |
