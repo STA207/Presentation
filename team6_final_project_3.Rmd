@@ -90,20 +90,19 @@ While these procedures are expected to control for some of the correlations, the
 To estimate the effect of mandatory jail sentences on a State's traffic fatality rate, we will fit the following linear regression relating the binary treatment variable to Fatality Rate:
 
 $$
-Y_{ijklm} = \mu + \alpha_i + \beta_j  + \gamma_k + \delta_l + \epsilon_{ijklm}
+Y_{ijkl} = \mu + \alpha_i + \beta_j  + \gamma_k + \epsilon_{ijkl}
 $$
-for $i \in [0, 1], j \in [1982, 1983, ..., 1988],  k \in [Northeast, Midwest, South, West], l \in [1, ..., 48],$ and $m \in [1, ..., n_{ijkl}]$.   
+for $i \in [Northeast, Midwest, South, West],$ $j \in [1982, 1983, ..., 1988],$ $k \in [0, 1],$ and $l \in  [1, ..., n_{ijk}]$.   
 
 Where     
-- $Y_{ijklm}$ represents the yearly traffic fatality rate of a given state in a given year.      
-- $\mu$ represents the overall sample mean of fatality rates.    
-- $\alpha_i$ represents the fixed effect of mandatory jail sentence law. $i = 1$ when the state has mandatory jail sentence, and $i = 0$ other wise.       
-- $\beta_j$ represents the fixed effect of year. Note that year is treated as a categorical variable, not a numerical variable. 
-- $\gamma_k$ represents the fixed effect of geographical region $k$.
-- $\delta_l$ represents the random effect of State $l$, and
-- $\epsilon_{ijklm}$ is the residual.     
+- $Y_{ijkl}$ represents the yearly traffic fatality rate of a given state in a given year.       
+- $\mu$ represents the overall sample mean of fatality rates.      
+- $\alpha_i$ represents the fixed effect of geographical region $i$.      
+- $\beta_j$ represents the fixed effect of year. Note that year is treated as a categorical variable, not a numerical variable.       
+- $\gamma_k$ represents the fixed effect of mandatory jail sentence law. $k = 1$ when the state has mandatory jail sentence, and $k = 0$ other wise.       
+- $\epsilon_{ijkl}$ is the error.     
 
-The model is constrained such that $\displaystyle\sum\limits_{i = 0, 1}\alpha_i = 0$, $\displaystyle\sum\limits_{i = 0, 1}\beta_j = 0$, $\displaystyle\sum\limits_{i = 0, 1}\gamma_k = 0$, $\delta_l \overset{\text{iid}}\sim N(0, \sigma^2_d)$, and $\epsilon_{ijklm} \overset{\text{iid}}\sim N(0, \sigma^2)$.    
+The model is constrained such that $\displaystyle\sum\limits_{i = 0, 1}\alpha_i = 0$, $\displaystyle\sum\limits_{i = 0, 1}\beta_j = 0$, $\displaystyle\sum\limits_{i = 0, 1}\gamma_k = 0$, and $\epsilon_{ijklm} \overset{\text{iid}}\sim N(0, \sigma^2)$.    
 
 ### Horvitz-Thompson Inverse-Probability Weighting     
 
@@ -165,21 +164,21 @@ The distribution of traffic fatality rate is not even across state borders (Figu
 data_map = data
 data_map$state = toupper(as.character(data_map$state))
 
-#jpeg("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap.jpeg")
-plot_usmap(data = data_map, values = "fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) + 
-  scale_fill_continuous(name = "Fatality Rate", label = scales::comma) + 
+# tiff("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap_year.tiff", units="in", width=5, height=4, res=300, compression = 'lzw')
+plot_usmap(data = data_map, values = "fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) +
+  scale_fill_continuous(name = "Fatality Rate", label = scales::comma, low = "lightskyblue1", high = "blue4") +
   theme(legend.position = "right") +
   facet_wrap(~year)
-#dev.off()
+# dev.off()
 
 # data_map_mean = data_map %>%
 #   group_by(state) %>%
 #   summarise(mean_fatal_rate = mean(fatal_rate, na.rm = TRUE))
 # 
-# jpeg("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap.jpeg")
-# plot_usmap(data = data_map_mean, values = "mean_fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) + 
-#   scale_fill_continuous(name = "Mean Fatality Rate, 1982-1988", label = scales::comma) + 
-#   theme(legend.position = "right") 
+# tiff("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap.tiff", units="in", width=5, height=4, res=300, compression = 'lzw')
+# plot_usmap(data = data_map_mean, values = "mean_fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) +
+#   scale_fill_continuous(name = "Fatality Rate", label = scales::comma, low = "lightskyblue1", high = "blue4") +
+#   theme(legend.position = "right")
 # dev.off()
 ```
 
@@ -262,7 +261,7 @@ dta_m = match.data(mod_match)
 dim(dta_m)
 ```
 
-```{r cov_bp, fig.cap = "Distributions of the covariates"}
+```{r cov_bp, fig.cap = "Distributions of the covariates after propensity score matching"}
 
 data_cov = c("spirits" , "unemp" , "income" , "beertax" , "baptist" , "mormon" , "drinkage" , "dry" , "youngdrivers" , "miles" , "pop" , "gsp")
 par(mfrow = c(3,4), oma=c(2,2,0,0), mar = c(1,3,1,0), mgp = c(2,1,0), xpd = NA)
@@ -273,9 +272,97 @@ title("Mandatory jail sentence", adj = 1, line = -11.5)
 par(mfrow = c(1,1))
 ```
 
-### Estimating Treatment Effect
+## Estimating Treatment Effect       
 
-Table \@ref(tab:random) and Table \@ref(tab:fix) show the estimated values of the model parameters. The variance of the random variable state is 0.32.    
+### Model Diagnostics
+
+#### Fixed Effect Model     
+
+The two crucial assumptions for a linear fixed effect model are the normal distribution and constant variance of the residuals across the fitted values. Influential observations will also be discussed.    
+```{r, include = FALSE}
+dta_m2 = dta_m
+dta_m2$region = "South"
+dta_m2$region[dta_m$state %in% c("wa","or","ca","mt","wy","id","nv","ut","co","az","nm")] = "West"
+dta_m2$region[dta_m$state %in% c("nd","mn","sd","ne","ks","ia","mo","wi","il","in","oh","mi")] = "Midwest"
+dta_m2$region[dta_m$state %in% c("me","nh","vt","ma","ri","ct","ny","nj","pa")] = "Northeast"
+dta_m2$region[dta_m$state %in% c("hi","ak")] = "Pacific"
+table(dta_m2$region)
+
+fit3 = lm(fatal_rate ~ region + year + jail, data = dta_m2)
+```
+
+```{r, include = FALSE}
+qqnorm(residuals(fit3, type="pearson"))
+qqline(residuals(fit3, type="pearson"), col = "red")
+```
+
+```{r, include = FALSE}
+hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
+```
+
+```{r, include = FALSE}
+plot(fit3)
+```
+
+```{r, include = FALSE}
+shapiro.test(residuals(fit3, type="pearson"))
+```
+
+```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Mixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
+par(mfrow=c(1,3))
+
+qqnorm(residuals(fit3))
+qqline(residuals(fit3), col = "red")
+
+hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
+plot(residuals(fit3)~fitted(fit3), main = "Residual versus fitted values", xlab = "Fitted values", ylab = "Residual values")
+abline(h=0)
+par(mfrow=c(1,1))
+```
+
+####  Normality and Equal Variance
+
+From the Q-Q plot of the residuals (Figure \@ref(fig:diag) (a)), we can see that the probability mass on the left and right tails are higher than what is expected from a normal distribution. The distribution of the residuals seem to be heavy-tailed. Thus, the normality assumption is not satisfied from the Q-Q plot. A histogram is used to visualize the distribution of the residuals (Figure \@ref(fig:diag) (b)). Figure \@ref(fig:diag) A Shapiro-Wilk normality test yielded p = 0.002183, rejecting the null hypothesis that the residuals are normally distributed.  (c) shows that the variance across residuals is not evenly distributed about mean zero.    
+
+#### Influential Observations:       
+
+```{r, include = FALSE}
+infl <- influence(fit3, obs=TRUE)
+```
+
+```{r, include = FALSE}
+plot(infl, which = "cook")
+```
+
+Since the Cook's distance for every observation is very small (the largest is slightly greater than 0.10), we conclude that there are no highly influential observations.     
+
+#### Response Variable Transformation:       
+
+```{r, include = FALSE}
+fit4 <- lm(log(fatal_rate) ~ region + year + jail, data = dta_m)
+```
+
+```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Mixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
+par(mfrow=c(1,3))
+
+qqnorm(residuals(fit3))
+qqline(residuals(fit3), col = "red")
+
+hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
+plot(residuals(fit3)~fitted(fit3), main = "Residual versus fitted values", xlab = "Fitted values", ylab = "Residual values")
+abline(h=0)
+par(mfrow=c(1,1))
+```
+
+####  Normality and Equal Variance
+
+**From the Q-Q plot of the residuals (Figure \@ref(fig:diag) (a)), we can see that the probability mass on the left and right tails are higher than what is expected from a normal distribution. The distribution of the residuals seem to be heavy-tailed. Thus, the normality assumption is not satisfied from the Q-Q plot. A histogram is used to visualize the distribution of the residuals (Figure \@ref(fig:diag) (b)). Figure \@ref(fig:diag) A Shapiro-Wilk normality test yielded p = 0.002183, rejecting the null hypothesis that the residuals are normally distributed.  (c) shows that the variance across residuals is not evenly distributed about mean zero.** 
+
+**In an attempt to remedy the departures of the assumptions of the mixed effect model, we attempted a log transformation of the response variable. However, the transformation of the response variable did not remedy the departures of the assumptions of the mixed effect model. Under time constraints we did not have the opportunity to try other transformations.**       
+
+#### Parameter estimation
+
+Table \@ref(tab:fix) show the estimated values of the model parameters.     
 
 ```{r, include = FALSE}
 dta_m2 = dta_m
@@ -286,35 +373,26 @@ dta_m2$region[dta_m$state %in% c("me","nh","vt","ma","ri","ct","ny","nj","pa")] 
 dta_m2$region[dta_m$state %in% c("hi","ak")] = "Pacific"
 table(dta_m2$region)
 
-fit3 = lmer(fatal_rate ~ jail + region + year + (1 | state), data = dta_m2)
+fit3 = lm(fatal_rate ~ region + year + jail, data = dta_m2)
 summary(fit3)
 anova(fit3)
 ```
-
-: \label{tab:random}Random effects of State
-
-| Groups| Variance |Std.Dev.|
-|-------|----------|-----------|
-| state |0.32466|  0.5698  |
-|Residual| 0.03989|  0.1997|  
 
 : \label{tab:fix}Fixed effects of mandatory jail sentence
 
 | Parameter |  Estimate | Std. Error | t value |
 |-----------|-----------|------------|---------|
-| Intercept | 1.99462   | 0.10258 | 19.444
-| jail    |     0.09928 |   0.07764  | 1.279
-
-
-
-
+| Intercept | 1.80953   | 0.12398 | 14.596
+| jail    |     0.04793 |   0.07357  | 0.652
 
 : \label{tab:anova}Analysis of Variance Table
 
 |Variance component |Df |Sum Sq|Mean Sq |F value|
 |-------------------|---|------|--------|------------|
-|jail | 1| 0.065236 |0.065236|  1.6355|
 
+|jail | 1| 4.904 |4.9042|  1.6355|
+|region| 3 | 29.646 | 9.8820 | 
+|year|
 
 
 To test whether mandatory jail sentence has significant effect on vehicle fatality rate, we fitted a reduced model with only random effect of state, and used a Chi-squared test to test the following hypotheses:    
@@ -355,66 +433,7 @@ sum(data_ps$fatal_rate * (1-data_ps$jail) * data_ps$w)/sum((1-data_ps$jail) * da
 
 The Horvitz-Thompson inverse-probability weighting calculated ATE is $\hat{\tau}^{ATE} = 0.096$. This number can be interpreted as the average effect of implementing mandatory jail sentence is increasing per 10K capita traffice fatality rate by 0.095.   
 
-## Model Diagnostics
 
-### Mixed Effect Model     
-
-The two crucial assumptions for a mixed effect model are the normal distribution and constant variance of the residuals across the fitted values. Influential observations will also be discussed.    
-
-```{r, include = FALSE}
-qqnorm(residuals(fit3, type="pearson"))
-qqline(residuals(fit3, type="pearson"), col = "red")
-```
-
-```{r, include = FALSE}
-hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
-```
-
-```{r, include = FALSE}
-plot(fit3)
-```
-
-```{r, include = FALSE}
-shapiro.test(residuals(fit3, type="pearson"))
-```
-
-```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Mixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
-par(mfrow=c(1,3))
-
-qqnorm(residuals(fit3))
-qqline(residuals(fit3), col = "red")
-
-hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
-plot(residuals(fit3)~fitted(fit3), main = "Residual versus fitted values", xlab = "Fitted values", ylab = "Residual values")
-abline(h=0)
-par(mfrow=c(1,1))
-```
-
-####  Normality and Equal Variance
-
-From the Q-Q plot of the residuals (Figure \@ref(fig:diag) (a)), we can see that the probability mass on the left and right tails are higher than what is expected from a normal distribution. The distribution of the residuals seem to be heavy-tailed. Thus, the normality assumption is not satisfied from the Q-Q plot. A histogram is used to visualize the distribution of the residuals (Figure \@ref(fig:diag) (b)). Figure \@ref(fig:diag) (c) shows that the variance across residuals is not evenly distributed about mean zero.    
-
-#### Influential Observations:
-
-
-```{r, include = FALSE}
-infl <- influence(fit3, obs=TRUE)
-```
-
-```{r, include = FALSE}
-plot(infl, which = "cook")
-```
-
-Since the Cook's distance for every observation is very small (the largest is slightly greater than 0.10), we conclude that there are no highly influential observations.
-
-
-#### Response Variable Transformation:
-
-```{r, include = FALSE}
-fit4 <- lmer(log(fatal_rate) ~ jail + (1 | state), data = dta_m)
-```
-
-In an attempt to remedy the departures of the assumptions of the mixed effect model, we attempted a log transformation of the response variable. However, the transformation of the response variable did not remedy the departures of the assumptions of the mixed effect model. Under time constraints we did not have the opportunity to try other transformations.        
 
 # Discussion
 
