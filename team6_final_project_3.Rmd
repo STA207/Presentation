@@ -165,10 +165,22 @@ The distribution of traffic fatality rate is not even across state borders (Figu
 data_map = data
 data_map$state = toupper(as.character(data_map$state))
 
+#jpeg("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap.jpeg")
 plot_usmap(data = data_map, values = "fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) + 
-  scale_fill_continuous(name = paste("Fatality Rate (", i, ")", sep = ""), label = scales::comma) + 
+  scale_fill_continuous(name = "Fatality Rate", label = scales::comma) + 
   theme(legend.position = "right") +
   facet_wrap(~year)
+#dev.off()
+
+# data_map_mean = data_map %>%
+#   group_by(state) %>%
+#   summarise(mean_fatal_rate = mean(fatal_rate, na.rm = TRUE))
+# 
+# jpeg("/Users/rongkui/Desktop/Classes/STA207/Presentation/USmap.jpeg")
+# plot_usmap(data = data_map_mean, values = "mean_fatal_rate", color = "#0072B2", exclude = c("AK","HI", "DC")) + 
+#   scale_fill_continuous(name = "Mean Fatality Rate, 1982-1988", label = scales::comma) + 
+#   theme(legend.position = "right") 
+# dev.off()
 ```
 
 Then, we explore the distribution of fatalities rate across all observations. Figure \@ref(fig:fatal)(b) shows that overall, states that had a mandatory jail sentence had a higher fatality rate than states that did not. Figure \@ref(fig:fatal)(c) shows that distributions of fatalities rate for different years are roughly the same.
@@ -227,7 +239,7 @@ prs_df = data.frame(pr_score = predict(m_ps, type = "response"),
 
 ```
 
-```{r two, echo = FALSE, fig.cap = "Propensity score distribution across two treatment groups",fig.align = 'center', fig.height=2.5, fig.width=6}
+```{r two, echo = FALSE, fig.cap = "Propensity score distribution across two treatment groups before matching",fig.align = 'center', fig.height=2.5, fig.width=6}
 labs = paste("Actual jail law implemented:", c("Yes", "No"))
 prs_df %>%
   mutate(jail = ifelse(jail == 1, labs[1], labs[2])) %>%
