@@ -252,7 +252,7 @@ prs_df %>%
 
 ### Matching    
 
-Nearest neighbor matching algorithm resulted in a new dataset of 188 entires, with 94 original entries with mandatory jail sentence matched with their respective non-treated entry with the most similar propensity score. Figure \@ref(fig:cov_bp) shows that distributions of the covariates are similar between treatments.    
+Nearest neighbor matching algorithm resulted in a new dataset of 188 entires, with 94 original entries with mandatory jail sentence matched with their respective non-treated entry with the most similar propensity score. Figure \@ref(fig:three) shows that after the matching procedure the propensity scores are more similarly distributed in the two treatment classes than the original dataset. Figure \@ref(fig:cov_bp) shows that distributions of the covariates are similar between treatments.    
 
 ```{r, include = FALSE}
 ## Executing matching algorithm    
@@ -262,11 +262,28 @@ dta_m = match.data(mod_match)
 dim(dta_m)
 ```
 
-```{r}
-mod_match
+```{r, include = FALSE}
+m_ps
+prs_df2 = data.frame(pr_score = predict(m_ps, type = "response"),
+                    jail = m_ps$model$jail, state = data$state, year = data$year)
+prs_df2
+prs_df2$ID = paste(prs_df2$state, prs_df2$year, sep = "_")
+dta_m3 = dta_m
+dta_m3$ID = paste(dta_m$state, dta_m$year, sep = "_")
+prs_df3 = prs_df2[prs_df2$ID %in% dta_m3$ID,]
+dim(prs_df3)
 ```
 
-
+```{r three, echo = FALSE, fig.cap = "Propensity score distribution across two treatment groups after matching",fig.align = 'center', fig.height=2.5, fig.width=6}
+labs = paste("Actual jail law implemented:", c("Yes", "No"))
+prs_df3 %>%
+  mutate(jail = ifelse(jail == 1, labs[1], labs[2])) %>%
+  ggplot(aes(x = pr_score)) +
+  geom_histogram(color = "white", bins = 30) +
+  facet_wrap(~jail) +
+  xlab("Propensity score: probability of implementing mandatory jail sentence") +
+  theme_bw()
+```
 
 ```{r cov_bp, fig.cap = "Distributions of the covariates after propensity score matching"}
 
