@@ -117,10 +117,12 @@ $$
 \tau^{ATE} = \mathbb{E}[\frac{ZY}{e(X)} - \frac{(1-Z)Y}{1-e(X)}]
 $$
 
-Define Horvits-Thompson inverse-pronbability weight as:   
+Define Horvits-Thompson inverse-probability weight as:   
 
 $$
-w_1(X_i) = \frac{1}{e(X_i)}, for Z_i = 1 \\
+w_1(X_i) = \frac{1}{e(X_i)}, for Z_i = 1
+$$
+$$
 w_0(X_i) = \frac{1}{1-e(X_i)}, for Z_i = 0
 $$
 Then an unbiased non-parametric estimator of ATE is:    
@@ -376,7 +378,7 @@ abline(h=0)
 par(mfrow=c(1,1))
 ```
 
-```{r, inlucde = FALSE}
+```{r, include = FALSE}
 shapiro.test(residuals(fit4, type="pearson"))
 ```
 
@@ -394,7 +396,7 @@ anova(fit4)
 
 : \label{tab:fix}Fixed effects of mandatory jail sentence
 
-| Parameter |  Estimate | Std. Error | t value | Pr(>|t|) |
+| Parameter |  Estimate | Std. Error | t value | Pr(>abs(t)) | 
 |-----------|-----------|------------|---------|----------|
 | Intercept | 0.56834   | 0.05508    | 10.319  | < 2 $\times 10^{-16}$ |
 | jail    |     0.04304 |   0.03268  | 1.317  | 0.189593  |
@@ -435,7 +437,7 @@ anova(fit_r)
 | Model | Residual Df  |  RSS  | Df  | Sum of Sq | Pr(>Chi) |
 |-------|--------------|-------|-----|-----------|----------|
 | Full |   177         | 7.7361                      
-| Reduced |   178     | 7.8119  |-1 | -0.075792 | 0.1879  |
+| Reduced |   178     | 7.8119  |1 | -0.075792 | 0.1879  |
 
 The p value suggests that we cannot reject null hypothesis that mandatory jail sentence does not have significant effect on vehicle fatality rate at $\alpha = 0.05$.    
 
