@@ -81,6 +81,7 @@ To match observations with mandatory jail sentences to observations without, we 
 
 After the propensity score matching, we would check whether our propensity score model has been adequately specified by comparing the distributions of the covariates between treatments.   
 
+
 ### Estimating Treatment Effect
 
 There are two primary challenges in our analysis. First, fatality rates are likely correlated between states who share a **geographic boundary**. For example, the States of New York and New Jersey share many of the same commutors, which correlate their traffic fatality rates. Secondly, there is a likely correlation in a State’s fatality rate **across time**. To mediate the effects of spatial correlations in our dataset, we introduced a "region" variable that categorizes states by their location. We included both the region and year variables as fixed effects in our model for estimating jail sentence treatment effect.  
@@ -261,6 +262,12 @@ dta_m = match.data(mod_match)
 dim(dta_m)
 ```
 
+```{r}
+mod_match
+```
+
+
+
 ```{r cov_bp, fig.cap = "Distributions of the covariates after propensity score matching"}
 
 data_cov = c("spirits" , "unemp" , "income" , "beertax" , "baptist" , "mormon" , "drinkage" , "dry" , "youngdrivers" , "miles" , "pop" , "gsp")
@@ -327,14 +334,10 @@ From the Q-Q plot of the residuals (Figure \@ref(fig:diag) (a)), we can see that
 #### Influential Observations:       
 
 ```{r, include = FALSE}
-infl <- influence(fit3, obs=TRUE)
+plot(fit3, which = 4)
 ```
 
-```{r, include = FALSE}
-plot(infl, which = "cook")
-```
-
-Since the Cook's distance for every observation is very small (the largest is slightly greater than 0.10), we conclude that there are no highly influential observations.     
+Since the Cook's distance for every observation is very small (the largest is less than 0.10), we conclude that there are no highly influential observations.     
 
 #### Response Variable Transformation     
 
