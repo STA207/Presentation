@@ -308,7 +308,7 @@ plot(fit3)
 shapiro.test(residuals(fit3, type="pearson"))
 ```
 
-```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Mixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
+```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Fixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
 par(mfrow=c(1,3))
 
 qqnorm(residuals(fit3))
@@ -336,80 +336,86 @@ plot(infl, which = "cook")
 
 Since the Cook's distance for every observation is very small (the largest is slightly greater than 0.10), we conclude that there are no highly influential observations.     
 
-#### Response Variable Transformation:       
+#### Response Variable Transformation     
+
+In order to address the non-normally distributed residuals and non-constant residual variance, we performed box-cox transformation for the response variable with $\lambda = 0$ ($Y^{'} = logY$). 
 
 ```{r, include = FALSE}
-fit4 <- lm(log(fatal_rate) ~ region + year + jail, data = dta_m)
+fit4 <- lm(log(fatal_rate) ~ region + year + jail, data = dta_m2)
 ```
 
-```{r diag, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Mixed Effect model assumptions. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
+```{r diag_log, echo = FALSE, fig.height=2, fig.width=6, fig.cap="Visual diagnostics of Fixed Effect model assumptions with log transformed response variable. (a). Normal Q-Q plot of residuals. (b) Histogram of model residuals. (c) Residuals-versus-fitted value scatter plot."}
 par(mfrow=c(1,3))
 
-qqnorm(residuals(fit3))
-qqline(residuals(fit3), col = "red")
+qqnorm(residuals(fit4))
+qqline(residuals(fit4), col = "red")
 
-hist(residuals(fit3), main = "Histogram of Residuals", xlab = "Residual Values")
-plot(residuals(fit3)~fitted(fit3), main = "Residual versus fitted values", xlab = "Fitted values", ylab = "Residual values")
+hist(residuals(fit4), main = "Histogram of Residuals", xlab = "Residual Values")
+plot(residuals(fit4)~fitted(fit4), main = "Residual versus fitted values", xlab = "Fitted values", ylab = "Residual values")
 abline(h=0)
 par(mfrow=c(1,1))
 ```
 
-####  Normality and Equal Variance
+```{r, inlucde = FALSE}
+shapiro.test(residuals(fit4, type="pearson"))
+```
 
-**From the Q-Q plot of the residuals (Figure \@ref(fig:diag) (a)), we can see that the probability mass on the left and right tails are higher than what is expected from a normal distribution. The distribution of the residuals seem to be heavy-tailed. Thus, the normality assumption is not satisfied from the Q-Q plot. A histogram is used to visualize the distribution of the residuals (Figure \@ref(fig:diag) (b)). Figure \@ref(fig:diag) A Shapiro-Wilk normality test yielded p = 0.002183, rejecting the null hypothesis that the residuals are normally distributed.  (c) shows that the variance across residuals is not evenly distributed about mean zero.** 
 
-**In an attempt to remedy the departures of the assumptions of the mixed effect model, we attempted a log transformation of the response variable. However, the transformation of the response variable did not remedy the departures of the assumptions of the mixed effect model. Under time constraints we did not have the opportunity to try other transformations.**       
+The diagnostic diagrams of the fixed effect model with log-transformed fatality rate (Figure \@ref(fig:diag_log)) shows normally distributed residuals. A Shapiro-Wilk normality test yielded p = 0.9304, suggesting strong evidence for normally distributed residuals. The variance of the residuals is also much more constant than the original model. 
 
 #### Parameter estimation
 
 Table \@ref(tab:fix) show the estimated values of the model parameters.     
 
 ```{r, include = FALSE}
-dta_m2 = dta_m
-dta_m2$region = "South"
-dta_m2$region[dta_m$state %in% c("wa","or","ca","mt","wy","id","nv","ut","co","az","nm")] = "West"
-dta_m2$region[dta_m$state %in% c("nd","mn","sd","ne","ks","ia","mo","wi","il","in","oh","mi")] = "Midwest"
-dta_m2$region[dta_m$state %in% c("me","nh","vt","ma","ri","ct","ny","nj","pa")] = "Northeast"
-dta_m2$region[dta_m$state %in% c("hi","ak")] = "Pacific"
-table(dta_m2$region)
-
-fit3 = lm(fatal_rate ~ region + year + jail, data = dta_m2)
-summary(fit3)
-anova(fit3)
+summary(fit4)
+anova(fit4)
 ```
 
 : \label{tab:fix}Fixed effects of mandatory jail sentence
 
-| Parameter |  Estimate | Std. Error | t value |
-|-----------|-----------|------------|---------|
-| Intercept | 1.80953   | 0.12398 | 14.596
-| jail    |     0.04793 |   0.07357  | 0.652
+| Parameter |  Estimate | Std. Error | t value | Pr(>|t|) |
+|-----------|-----------|------------|---------|----------|
+| Intercept | 0.56834   | 0.05508    | 10.319  | < 2 $\times 10^{-16}$ |
+| jail    |     0.04304 |   0.03268  | 1.317  | 0.189593  |
 
 : \label{tab:anova}Analysis of Variance Table
 
-|Variance component |Df |Sum Sq|Mean Sq |F value|
-|-------------------|---|------|--------|------------|
+|Variance component |Df |Sum Sq|Mean Sq |F value| Pr(>F) |
+|-------------------|---|------|--------|-------|--------|
+|jail               | 1 |0.0758| 0.07579|1.7341 |0.1896  |
 
-|jail | 1| 4.904 |4.9042|  1.6355|
-|region| 3 | 29.646 | 9.8820 | 
-|year|
+To test whether mandatory jail sentence has significant effect on vehicle fatality rate, we fitted a reduced model with only fixed effects of region and time:       
 
+$$
+Y_{ijl} = \mu + \alpha_i + \beta_j + \epsilon_{ijl}
+$$
 
-To test whether mandatory jail sentence has significant effect on vehicle fatality rate, we fitted a reduced model with only random effect of state, and used a Chi-squared test to test the following hypotheses:    
-$H_0$: mandatory jail sentence has no significant effect on vehicle fatality rate ($\alpha_0 = \alpha_1$);   
-$H_1$: mandatory jail sentence has significant effect on vehicle fatality rate ($\alpha_0 \neq \alpha_1$).    
+for $i \in [Northeast, Midwest, South, West],$ $j \in [1982, 1983, ..., 1988],$ $k \in [0, 1],$ and $l \in  [1, ..., n_{ijk}]$.   
+
+Where     
+- $Y_{ijl}$ represents the yearly traffic fatality rate of a given state in a given year.       
+- $\mu$ represents the overall sample mean of fatality rates.      
+- $\alpha_i$ represents the fixed effect of geographical region $i$.      
+- $\beta_j$ represents the fixed effect of year. Note that year is treated as a categorical variable, not a numerical variable.       
+- $\epsilon_{ijl}$ is the error.      
+
+We used a Chi-squared test to test the following hypotheses:    
+$H_0$: mandatory jail sentence has no significant effect on vehicle fatality rate ($\gamma_0 = \gamma_1$ in full model);   
+$H_1$: mandatory jail sentence has significant effect on vehicle fatality rate ($\gamma_0 \neq \gamma_1$ in full model).    
 
 ```{r, include=FALSE}
-fit_r = lmer(fatal_rate ~ region + year + (1 | state), data = dta_m2)
-anova(fit3, fit_r, test = "Chisq")
+fit_r = lm(log(fatal_rate) ~ region + year, data = dta_m2)
+anova(fit4, fit_r, test = "Chisq")
+anova(fit_r)
 ```
 
 : \label{tab:chisq}Chi-squared test of fixed effect
 
-| Model  |  Df  |    AIC  |  BIC  | logLik | deviance | Chisq | Chi Df | Pr(>Chisq) |
-|-----|------|---------|-------|--------|----------|------------|------------|------------|
-|reduced |  12|49.788| 88.625 |-12.894    |  25.788     |   |     |    |        
-|full   |13 |50.372 |92.446|-12.186 | 24.372 |1.4152 | 1 | 0.2342 |
+| Model | Residual Df  |  RSS  | Df  | Sum of Sq | Pr(>Chi) |
+|-------|--------------|-------|-----|-----------|----------|
+| Full |   177         | 7.7361                      
+| Reduced |   178     | 7.8119  |-1 | -0.075792 | 0.1879  |
 
 The p value suggests that we cannot reject null hypothesis that mandatory jail sentence does not have significant effect on vehicle fatality rate at $\alpha = 0.05$.    
 
@@ -433,9 +439,7 @@ sum(data_ps$fatal_rate * (1-data_ps$jail) * data_ps$w)/sum((1-data_ps$jail) * da
 
 The Horvitz-Thompson inverse-probability weighting calculated ATE is $\hat{\tau}^{ATE} = 0.096$. This number can be interpreted as the average effect of implementing mandatory jail sentence is increasing per 10K capita traffice fatality rate by 0.095.   
 
-
-
-# Discussion
+# Discussion    
 
 ## Propensity Score Matching    
 
