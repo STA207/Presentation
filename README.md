@@ -192,7 +192,7 @@ represents the fixed effect of geographical region
 represents the fixed effect of year. Note that year is treated as a
 categorical variable, not a numerical variable.
 
--![\\gamma\_k](https://latex.codecogs.com/png.latex?%5Cgamma_k "\gamma_k")
+- ![\\gamma\_k](https://latex.codecogs.com/png.latex?%5Cgamma_k "\gamma_k")
 represents the fixed effect of mandatory jail sentence law.
 ![k = 1](https://latex.codecogs.com/png.latex?k%20%3D%201 "k = 1") when
 the state has mandatory jail sentence, and
@@ -401,7 +401,6 @@ covariates are similar between treatments.
 <p class="caption">
 Figure 4: Propensity score distribution across two treatment groups after matching
 </p>
-:::
 
 ![Distributions of the covariates after propensity score
 matching](team6_final_project_copy_files/figure-html/cov_bp-1.png)
