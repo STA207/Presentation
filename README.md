@@ -173,24 +173,30 @@ Y_{ijkl} = \mu + \alpha_i + \beta_j  + \gamma_k + \epsilon_{ijkl}
 and
 ![l \\in \[1, \..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
 
-Where\
+Where  
+
 - ![Y\_{ijkl}](https://latex.codecogs.com/png.latex?Y_%7Bijkl%7D "Y_{ijkl}")
 represents the yearly traffic fatality rate of a given state in a given
-year.\
+year.
+
 - ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu") represents
-the overall sample mean of fatality rates.\
+the overall sample mean of fatality rates.
+
 - ![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
 represents the fixed effect of geographical region
-![i](https://latex.codecogs.com/png.latex?i "i").\
+![i](https://latex.codecogs.com/png.latex?i "i").
+
 - ![\\beta\_j](https://latex.codecogs.com/png.latex?%5Cbeta_j "\beta_j")
 represents the fixed effect of year. Note that year is treated as a
-categorical variable, not a numerical variable.\
+categorical variable, not a numerical variable.
+
 -![\\gamma\_k](https://latex.codecogs.com/png.latex?%5Cgamma_k "\gamma_k")
 represents the fixed effect of mandatory jail sentence law.
 ![k = 1](https://latex.codecogs.com/png.latex?k%20%3D%201 "k = 1") when
 the state has mandatory jail sentence, and
 ![k = 0](https://latex.codecogs.com/png.latex?k%20%3D%200 "k = 0") other
-wise.\
+wise.
+
 - ![\\epsilon\_{ijkl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijkl%7D "\epsilon_{ijkl}")
 is the error.
 
@@ -373,16 +379,11 @@ A logistic regression model was fit to estimate propensity score for
 matching treated and untreated samples. Distribution of the estimated
 propensity scores are displayed in Figure 3.
 
-::: {.figure style="text-align: center"}
 <img src="team6_final_project_copy_files/figure-html/two-1.png" alt="Propensity score distribution across two treatment groups before matching"  />
 <p class="caption">
-Propensity score distribution across two treatment groups before
+Figure 3: Propensity score distribution across two treatment groups before
 matching
 </p>
-:::
-
-Figure 3: Propensity score distribution across two treatment groups
-before matching
 
 ### Matching
 
@@ -394,15 +395,11 @@ scores are more similarly distributed in the two treatment classes than
 the original dataset. Figure 5 shows that distributions of the
 covariates are similar between treatments.
 
-::: {.figure style="text-align: center"}
 <img src="team6_final_project_copy_files/figure-html/three-1.png" alt="Propensity score distribution across two treatment groups after matching"  />
 <p class="caption">
-Propensity score distribution across two treatment groups after matching
+Figure 4: Propensity score distribution across two treatment groups after matching
 </p>
 :::
-
-Figure 4: Propensity score distribution across two treatment groups
-after matching
 
 ![Distributions of the covariates after propensity score
 matching](team6_final_project_copy_files/figure-html/cov_bp-1.png)
@@ -480,7 +477,7 @@ Table 1: Fixed effects of mandatory jail sentence
 
   | Parameter | Estimate |  Std. Error | t value  | Pr(\>abs(t)) |
   |-----------|----------|-------------|----------|--------------|
-  |Intercept  | 0.56834  |  0.05508    |  10.319  |  \< 2 ![\\times 10\^{-16}](https://latex.codecogs.com/png.latex? %5Ctimes%2010%5E%7B-16%7D "\times 10^{-16}") |
+  |Intercept  | 0.56834  |  0.05508    |  10.319  |  \< 2 ![\\times 10\^{-16}](https://latex.codecogs.com/png.latex?%5Ctimes%2010%5E%7B-16%7D "\times 10^{-16}") |
   |jail       | 0.04304  |  0.03268    |  1.317   |  0.189593    |
 
 Table 2: Analysis of Variance Table
@@ -506,22 +503,27 @@ for
 and
 ![l \\in \[1, \..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
 
-Where\
+Where
 - ![Y\_{ijl}](https://latex.codecogs.com/png.latex?Y_%7Bijl%7D "Y_{ijl}")
 represents the yearly traffic fatality rate of a given state in a given
-year.\
+year.
+
 - ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu") represents
-the overall sample mean of fatality rates.\
+the overall sample mean of fatality rates.
+
 -![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
 represents the fixed effect of geographical region
-![i](https://latex.codecogs.com/png.latex?i "i").\
+![i](https://latex.codecogs.com/png.latex?i "i").
+
 - ![\\beta\_j](https://latex.codecogs.com/png.latex?%5Cbeta_j "\beta_j")
 represents the fixed effect of year. Note that year is treated as a
-categorical variable, not a numerical variable.\
+categorical variable, not a numerical variable.
+
 - ![\\epsilon\_{ijl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijl%7D "\epsilon_{ijl}")
 is the error.
 
-We used a Chi-squared test to test the following hypotheses:\
+We used a Chi-squared test to test the following hypotheses:
+
 ![H\_0](https://latex.codecogs.com/png.latex?H_0 "H_0"): mandatory jail
 sentence has no significant effect on vehicle fatality rate
 (![\\gamma\_0 = \\gamma\_1](https://latex.codecogs.com/png.latex?%5Cgamma_0%20%3D%20%5Cgamma_1 "\gamma_0 = \gamma_1")
@@ -600,12 +602,12 @@ necessary for causal inference:
     assumption is likely to be violated in this dataset because
     legislations can arise from existing conditions (Figure 8(a)).
 
-3.Observation of all Covariates: Although this expansive dataset
-captures many prominent variables that are associated with vehicle
-fatality rate, many more economic and social factors come into play in
-impacting the interactions between the implementation of mandatory jail
-sentence and vehicle fatality rate. We cannot confidently exclude the
-possiblity of the existence of many of such variables (Figure 8(b)).
+3.  Observation of all Covariates: Although this expansive dataset
+	captures many prominent variables that are associated with vehicle
+	fatality rate, many more economic and social factors come into play in
+	impacting the interactions between the implementation of mandatory jail
+	sentence and vehicle fatality rate. We cannot confidently exclude the
+	possiblity of the existence of many of such variables (Figure 8(b)).
 
 ![Directed acyclic graphs of scenarios where direction of causal
 inference changes. a. Violation of exogeneity. b. Violation of
