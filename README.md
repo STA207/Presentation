@@ -13,7 +13,7 @@ Background
 
 Traffic accidents cause thousands of deaths in the United States every
 year. Data pertinent to US traffic fatalities from 1982 to 1988 can be
-easily accessed in the AER “Fatalities” dataset. The data was obtained
+easily accessed in the AER "Fatalities" dataset. The data was obtained
 from sources such as the US Department of Transportation Fatal Accident
 Reporting System (FARS) and the US Bureau of Labor Statistics. The
 dataset includes panel data for 48 states (Alaska and Hawaii not
@@ -33,7 +33,7 @@ recorded for 34 distinct variables.
 Due to the observational nature of the data, obtaining causal effects
 may pose a challenge. In observational studies, treatment selection is
 influenced by subject characteristics. In the context of our study,
-“treatment assignment” refers to whether a state has a mandatory jail
+"treatment assignment" refers to whether a state has a mandatory jail
 sentence. It is not difficult to imagine that demographic
 characteristics of a state can influence both its traffic legislations
 as well as its traffic fatality rate, causing confounding effects. As a
@@ -71,7 +71,7 @@ Population and Study Design
 ---------------------------
 
 The response variable used in this analysis is the yearly traffic
-fatality rate per 10,000 State residents. The “Fatalities” dataset is a
+fatality rate per 10,000 State residents. The "Fatalities" dataset is a
 panel dataset from 1982 to 1988. In a typical panel dataset, each
 subject has multiple entries, some of which correspond to pre-treatment
 records while others post-treatment. In this regard, the vehicle
@@ -109,13 +109,13 @@ covariates. The logistic regression model we used to estimate the
 propensity score is as follows:
 
 ![
-log(\\frac{\\pi\_i}{1-\\pi\_i}) = \\beta\_0 + \\beta\_1x\_{i1} + ... + \\beta\_kx\_{ik}, 
+log(\\frac{\\pi\_i}{1-\\pi\_i}) = \\beta\_0 + \\beta\_1x\_{i1} + \... + \\beta\_kx\_{ik}, 
 ](https://latex.codecogs.com/png.latex?%0Alog%28%5Cfrac%7B%5Cpi_i%7D%7B1-%5Cpi_i%7D%29%20%3D%20%5Cbeta_0%20%2B%20%5Cbeta_1x_%7Bi1%7D%20%2B%20...%20%2B%20%5Cbeta_kx_%7Bik%7D%2C%20%0A "
 log(\frac{\pi_i}{1-\pi_i}) = \beta_0 + \beta_1x_{i1} + ... + \beta_kx_{ik}, 
 ")
 
  Where
-![\\pi\_i = P(Z\_i = 1 | \\overrightarrow{X\_i} = \\overrightarrow{x\_i})](https://latex.codecogs.com/png.latex?%5Cpi_i%20%3D%20P%28Z_i%20%3D%201%20%7C%20%5Coverrightarrow%7BX_i%7D%20%3D%20%5Coverrightarrow%7Bx_i%7D%29 "\pi_i = P(Z_i = 1 | \overrightarrow{X_i} = \overrightarrow{x_i})"),
+![\\pi\_i = P(Z\_i = 1 \| \\overrightarrow{X\_i} = \\overrightarrow{x\_i})](https://latex.codecogs.com/png.latex?%5Cpi_i%20%3D%20P%28Z_i%20%3D%201%20%7C%20%5Coverrightarrow%7BX_i%7D%20%3D%20%5Coverrightarrow%7Bx_i%7D%29 "\pi_i = P(Z_i = 1 | \overrightarrow{X_i} = \overrightarrow{x_i})"),
 ![Z\_i](https://latex.codecogs.com/png.latex?Z_i "Z_i") is the indicator
 variable for mandatory jail sentence upon initial drunk driving
 conviction.
@@ -127,7 +127,7 @@ other wise.
 is a vector of length 14, indicating the realized value of the 14
 independent variables of the i-th subject in the logistic regression
 model.
-![k = 1, ..., 15, i = 1,...,336](https://latex.codecogs.com/png.latex?k%20%3D%201%2C%20...%2C%2015%2C%20i%20%3D%201%2C...%2C336 "k = 1, ..., 15, i = 1,...,336").
+![k = 1, \..., 15, i = 1,\...,336](https://latex.codecogs.com/png.latex?k%20%3D%201%2C%20...%2C%2015%2C%20i%20%3D%201%2C...%2C336 "k = 1, ..., 15, i = 1,...,336").
 
 ### Matching
 
@@ -145,7 +145,7 @@ There are two primary challenges in our analysis. First, fatality rates
 are likely correlated between states who share a **geographic
 boundary**. For example, the States of New York and New Jersey share
 many of the same commutors, which correlate their traffic fatality
-rates. Secondly, there is a likely correlation in a State’s fatality
+rates. Secondly, there is a likely correlation in a State's fatality
 rate **across time**. To mediate the effects of spatial correlations in
 our dataset, we introduced a "region" variable that categorizes states
 by their location. We included both the region and year variables as
@@ -168,34 +168,30 @@ Y_{ijkl} = \mu + \alpha_i + \beta_j  + \gamma_k + \epsilon_{ijkl}
 
  for
 ![i \\in \[Northeast, Midwest, South, West\],](https://latex.codecogs.com/png.latex?i%20%5Cin%20%5BNortheast%2C%20Midwest%2C%20South%2C%20West%5D%2C "i \in [Northeast, Midwest, South, West],")
-![j \\in \[1982, 1983, ..., 1988\],](https://latex.codecogs.com/png.latex?j%20%5Cin%20%5B1982%2C%201983%2C%20...%2C%201988%5D%2C "j \in [1982, 1983, ..., 1988],")
+![j \\in \[1982, 1983, \..., 1988\],](https://latex.codecogs.com/png.latex?j%20%5Cin%20%5B1982%2C%201983%2C%20...%2C%201988%5D%2C "j \in [1982, 1983, ..., 1988],")
 ![k \\in \[0, 1\],](https://latex.codecogs.com/png.latex?k%20%5Cin%20%5B0%2C%201%5D%2C "k \in [0, 1],")
 and
-![l \\in \[1, ..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
+![l \\in \[1, \..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
 
 Where\
--
-![Y\_{ijkl}](https://latex.codecogs.com/png.latex?Y_%7Bijkl%7D "Y_{ijkl}")
+- ![Y\_{ijkl}](https://latex.codecogs.com/png.latex?Y_%7Bijkl%7D "Y_{ijkl}")
 represents the yearly traffic fatality rate of a given state in a given
 year.\
 - ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu") represents
 the overall sample mean of fatality rates.\
--
-![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
+- ![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
 represents the fixed effect of geographical region
 ![i](https://latex.codecogs.com/png.latex?i "i").\
 - ![\\beta\_j](https://latex.codecogs.com/png.latex?%5Cbeta_j "\beta_j")
 represents the fixed effect of year. Note that year is treated as a
 categorical variable, not a numerical variable.\
--
-![\\gamma\_k](https://latex.codecogs.com/png.latex?%5Cgamma_k "\gamma_k")
+-![\\gamma\_k](https://latex.codecogs.com/png.latex?%5Cgamma_k "\gamma_k")
 represents the fixed effect of mandatory jail sentence law.
 ![k = 1](https://latex.codecogs.com/png.latex?k%20%3D%201 "k = 1") when
 the state has mandatory jail sentence, and
 ![k = 0](https://latex.codecogs.com/png.latex?k%20%3D%200 "k = 0") other
 wise.\
--
-![\\epsilon\_{ijkl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijkl%7D "\epsilon_{ijkl}")
+- ![\\epsilon\_{ijkl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijkl%7D "\epsilon_{ijkl}")
 is the error.
 
 The model is constrained such that
@@ -231,7 +227,7 @@ is a vector of length 14, indicating the realized value of the 14
 independent variables of the
 ![i](https://latex.codecogs.com/png.latex?i "i")-th subject in the
 logistic regression model.
-![e(X) = Pr(Z = 1 | X)](https://latex.codecogs.com/png.latex?e%28X%29%20%3D%20Pr%28Z%20%3D%201%20%7C%20X%29 "e(X) = Pr(Z = 1 | X)")
+![e(X) = Pr(Z = 1 \| X)](https://latex.codecogs.com/png.latex?e%28X%29%20%3D%20Pr%28Z%20%3D%201%20%7C%20X%29 "e(X) = Pr(Z = 1 | X)")
 is the propensity score of subject
 ![i](https://latex.codecogs.com/png.latex?i "i").
 
@@ -283,7 +279,7 @@ discussed.
 Causal Inference Assumptions
 ----------------------------
 
-A State legislature’s decision to implement this policy is based upon
+A State legislature's decision to implement this policy is based upon
 much of the information contained within our dataset. This creates a
 dependence between the assigned treatment level and our other predictor
 variables. We control for this by conditioning on the covariates which
@@ -312,7 +308,7 @@ fact, positive.
 unconfounded if the treatment status is conditionally independent of the
 potential outcomes, given a set of covariates (Rubin, 1990). This
 assumption is not satisfied by our original data since a clear
-dependence exists between a State’s decision to implement mandatory jail
+dependence exists between a State's decision to implement mandatory jail
 sentences is based upon much of the data we plan to use in our analysis.
 However, propensity score matching will control for this since the
 propensity score is conditioned on all potential covariates (Rosenbaum,
@@ -377,15 +373,13 @@ A logistic regression model was fit to estimate propensity score for
 matching treated and untreated samples. Distribution of the estimated
 propensity scores are displayed in Figure 3.
 
-<div class="figure" style="text-align: center">
-
+::: {.figure style="text-align: center"}
 <img src="team6_final_project_copy_files/figure-html/two-1.png" alt="Propensity score distribution across two treatment groups before matching"  />
 <p class="caption">
 Propensity score distribution across two treatment groups before
 matching
 </p>
-
-</div>
+:::
 
 Figure 3: Propensity score distribution across two treatment groups
 before matching
@@ -400,14 +394,12 @@ scores are more similarly distributed in the two treatment classes than
 the original dataset. Figure 5 shows that distributions of the
 covariates are similar between treatments.
 
-<div class="figure" style="text-align: center">
-
+::: {.figure style="text-align: center"}
 <img src="team6_final_project_copy_files/figure-html/three-1.png" alt="Propensity score distribution across two treatment groups after matching"  />
 <p class="caption">
 Propensity score distribution across two treatment groups after matching
 </p>
-
-</div>
+:::
 
 Figure 4: Propensity score distribution across two treatment groups
 after matching
@@ -462,7 +454,7 @@ In order to address the non-normally distributed residuals and
 non-constant residual variance, we performed box-cox transformation for
 the response variable with
 ![\\lambda = 0](https://latex.codecogs.com/png.latex?%5Clambda%20%3D%200 "\lambda = 0")
-(![Y\^{'} = logY](https://latex.codecogs.com/png.latex?Y%5E%7B%27%7D%20%3D%20logY "Y^{'} = logY")).
+(![Y\^{\'} = logY](https://latex.codecogs.com/png.latex?Y%5E%7B%27%7D%20%3D%20logY "Y^{'} = logY")).
 
 ![Visual diagnostics of Fixed Effect model assumptions with log
 transformed response variable. (a). Normal Q-Q plot of residuals. (b)
@@ -486,16 +478,16 @@ Table 1 show the estimated values of the model parameters.
 
 Table 1: Fixed effects of mandatory jail sentence
 
-  Parameter   Estimate   Std. Error   t value   Pr(&gt;abs(t))
-  ----------- ---------- ------------ --------- ---------------------------------------------------------------------------------------------------------------
-  Intercept   0.56834    0.05508      10.319    &lt; 2 ![\\times 10\^{-16}](https://latex.codecogs.com/png.latex?%5Ctimes%2010%5E%7B-16%7D "\times 10^{-16}")
-  jail        0.04304    0.03268      1.317     0.189593
+  | Parameter | Estimate |  Std. Error | t value  | Pr(\>abs(t)) |
+  |-----------|----------|-------------|----------|--------------|
+  |Intercept  | 0.56834  |  0.05508    |  10.319  |  \< 2 ![\\times 10\^{-16}](https://latex.codecogs.com/png.latex? %5Ctimes%2010%5E%7B-16%7D "\times 10^{-16}") |
+  |jail       | 0.04304  |  0.03268    |  1.317   |  0.189593    |
 
 Table 2: Analysis of Variance Table
 
-  Variance component   Df   Sum Sq   Mean Sq   F value   Pr(&gt;F)
-  -------------------- ---- -------- --------- --------- -----------
-  jail                 1    0.0758   0.07579   1.7341    0.1896
+  | Variance component  |  Df |  Sum Sq |  Mean Sq |  F value |  Pr(\>F) |
+  |---------------------|-----|---------|----------|----------|----------|
+  | jail                | 1   | 0.0758  | 0.07579  | 1.7341   | 0.1896   |
 
 To test whether mandatory jail sentence has significant effect on
 vehicle fatality rate, we fitted a reduced model with only fixed effects
@@ -509,27 +501,24 @@ Y_{ijl} = \mu + \alpha_i + \beta_j + \epsilon_{ijl}
 
 for
 ![i \\in \[Northeast, Midwest, South, West\],](https://latex.codecogs.com/png.latex?i%20%5Cin%20%5BNortheast%2C%20Midwest%2C%20South%2C%20West%5D%2C "i \in [Northeast, Midwest, South, West],")
-![j \\in \[1982, 1983, ..., 1988\],](https://latex.codecogs.com/png.latex?j%20%5Cin%20%5B1982%2C%201983%2C%20...%2C%201988%5D%2C "j \in [1982, 1983, ..., 1988],")
+![j \\in \[1982, 1983, \..., 1988\],](https://latex.codecogs.com/png.latex?j%20%5Cin%20%5B1982%2C%201983%2C%20...%2C%201988%5D%2C "j \in [1982, 1983, ..., 1988],")
 ![k \\in \[0, 1\],](https://latex.codecogs.com/png.latex?k%20%5Cin%20%5B0%2C%201%5D%2C "k \in [0, 1],")
 and
-![l \\in \[1, ..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
+![l \\in \[1, \..., n\_{ijk}\]](https://latex.codecogs.com/png.latex?l%20%5Cin%20%5B1%2C%20...%2C%20n_%7Bijk%7D%5D "l \in [1, ..., n_{ijk}]").
 
 Where\
--
-![Y\_{ijl}](https://latex.codecogs.com/png.latex?Y_%7Bijl%7D "Y_{ijl}")
+- ![Y\_{ijl}](https://latex.codecogs.com/png.latex?Y_%7Bijl%7D "Y_{ijl}")
 represents the yearly traffic fatality rate of a given state in a given
 year.\
 - ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu") represents
 the overall sample mean of fatality rates.\
--
-![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
+-![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
 represents the fixed effect of geographical region
 ![i](https://latex.codecogs.com/png.latex?i "i").\
 - ![\\beta\_j](https://latex.codecogs.com/png.latex?%5Cbeta_j "\beta_j")
 represents the fixed effect of year. Note that year is treated as a
 categorical variable, not a numerical variable.\
--
-![\\epsilon\_{ijl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijl%7D "\epsilon_{ijl}")
+- ![\\epsilon\_{ijl}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bijl%7D "\epsilon_{ijl}")
 is the error.
 
 We used a Chi-squared test to test the following hypotheses:\
@@ -544,10 +533,10 @@ in full model).
 
 Table 3: Chi-squared test of fixed effect
 
-  Model     Residual Df   RSS      Df   Sum of Sq   Pr(&gt;Chi)
-  --------- ------------- -------- ---- ----------- -------------
-  Full      177           7.7361
-  Reduced   178           7.8119   1    -0.075792   0.1879
+  |Model    |Residual Df  |RSS     |Df  |Sum of Sq  |Pr(\>Chi)  |
+  |---------|-------------|--------|----|-----------|-----------|
+  |Full     |177          |7.7361  |    |           |           |             
+  |Reduced  |178          |7.8119  |1   |-0.075792  |0.1879     |
 
 The p value suggests that we cannot reject null hypothesis that
 mandatory jail sentence does not have significant effect on vehicle
@@ -649,18 +638,19 @@ References
 
 Austin P. C. (2011). An Introduction to Propensity Score Methods for
 Reducing the Effects of Confounding in Observational Studies.
-Multivariate behavioral research, 46(3), 399–424.
+Multivariate behavioral research, 46(3), 399--424.
 doi:10.1080/00273171.2011.568786
 
 Brookhart M.A., Schneeweiss S., Rothman K.J., Glynn R.J., Avorn J.,
 Stürmer T. (2006). Variable selection for propensity score models.
-American Journal of Epidemiology. 163, 1149–1156.\
+American Journal of Epidemiology. 163, 1149--1156.\
 Rosenbaum P.R., Rubin D.B. (1983). The central role of the propensity
-score in observational studies for causal effects. Biometrika. 70:41–55.
+score in observational studies for causal effects. Biometrika.
+70:41--55.
 
 Durbin, D. R., Elliott, M. R., & Winston, F. K. (2009). A propensity
 score approach to estimating child restraint effectiveness in preventing
-mortality. Statistics and Its Interface, 2(4), 437–447. doi:
+mortality. Statistics and Its Interface, 2(4), 437--447. doi:
 10.4310/sii.2009.v2.n4.a5
 
 Horvitz, D. G., & Thompson, D. J. (1952). A generalization of sampling
@@ -684,7 +674,7 @@ Score in Observational Studies for Causal Effects. Biometrika, 70(1),
 Sasidharan, L., & Donnell, E. T. (2013). Application of propensity
 scores and potential outcomes to estimate effectiveness of traffic
 safety countermeasures: Exploratory analysis using intersection lighting
-data. Accident Analysis & Prevention, 50, 539–553. doi:
+data. Accident Analysis & Prevention, 50, 539--553. doi:
 10.1016/j.aap.2012.05.036
 
 Smith, H. L. (1997). 6. Matching with Multiple Controls to Estimate
