@@ -511,7 +511,7 @@ year.
 - ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu") represents
 the overall sample mean of fatality rates.
 
--![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
+- ![\\alpha\_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
 represents the fixed effect of geographical region
 ![i](https://latex.codecogs.com/png.latex?i "i").
 
