@@ -56,10 +56,12 @@ Questions of Interest
 ---------------------
 
 -   Are there demographic features that correlate with a state's
-    mandatory jail sentence law?\
+    mandatory jail sentence law?
+
 -   Is a state's mandatory jail sentence law associated with its annual
     traffic fatality rate, after adjusting for potential covariating
-    demographic variables?\
+    demographic variables?
+    
 -   Can we draw a causal conclusion regarding the relationship between a
     state's mandatory jail sentence law and its annual traffic fatality
     rate?
